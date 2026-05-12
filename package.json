@@ -1,0 +1,26 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "npm start --prefix client",
+    "server": "node server/index.js",
+    "server:install": "npm install --prefix server",
+    "server:start": "pm2 start ecosystem.config.cjs",
+    "server:restart": "pm2 restart school-api",
+    "server:stop": "pm2 stop school-api",
+    "server:logs": "pm2 logs school-api",
+    "server:status": "pm2 status school-api",
+    "server:save": "pm2 save",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "devDependencies": {}
+}
