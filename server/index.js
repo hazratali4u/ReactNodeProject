@@ -91,6 +91,44 @@ app.post('/api/students/sp', async (req, res) => {
   }
 });
 
+app.get('/api/menus', async (req, res) => {
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request().query(`
+      SELECT Id, Name, Path, ParentId
+      FROM dbo.Menus
+      ORDER BY ParentId, Id
+    `);
+
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Failed to load menus:', error);
+    res.status(500).json({ message: 'Failed to load menus.' });
+  }
+});
+
+app.get('/api/menus/children/:parentId', async (req, res) => {
+  const { parentId } = req.params;
+
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool
+      .request()
+      .input('ParentId', sql.Int, parseInt(parentId, 10))
+      .query(`
+        SELECT Id, Name, Path, ParentId
+        FROM dbo.Menus
+        WHERE ParentId = @ParentId
+        ORDER BY Id
+      `);
+
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Failed to load child menus:', error);
+    res.status(500).json({ message: 'Failed to load child menus.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
